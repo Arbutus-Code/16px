@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0f;
+  --color-bg-raised: #14141f;
+  --color-bg-panel: #1a1a2e;
+  --color-bg-input: #10101a;
+  --color-border: #2a2a3e;
+  --color-border-bright: #3a3a5e;
+  --color-text: #e0e0e8;
+  --color-text-dim: #b3b3c9;
+  --color-text-bright: #ffffff;
+  --color-accent: #ff3e3e;
+  --color-accent-hover: #ff5555;
+  --color-accent-secondary: #00e5ff;
+  --color-accent-tertiary: #ffe03e;
+  --color-success: #3eff7e;
+  --color-warning: #ff9e3e;
+
+  --font-mono:
+    "JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  --font-sans: "Inter", "SF Pro Display", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-text-bright);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-secondary);
+  outline-offset: 2px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
