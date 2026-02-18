@@ -1,0 +1,210 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import PageFooter from "../components/PageFooter.astro";
+---
+
+<Layout
+  title="Terms of Use | 16px"
+  description="Terms of use for the 16px pixel art editor and website."
+  canonicalPath="/terms"
+>
+  <div class="min-h-screen bg-bg text-text flex flex-col">
+    <PageHeader />
+
+    <main class="flex-1 max-w-3xl mx-auto px-6 py-12 sm:py-16 w-full">
+      <article class="legal-content">
+        <header class="mb-12">
+          <h1
+            class="text-3xl sm:text-4xl font-bold text-text-bright tracking-tight"
+          >
+            Terms of Use
+          </h1>
+          <p class="mt-3 text-text-dim text-sm">Last updated: February 2026</p>
+        </header>
+
+        <section>
+          <h2>Welcome</h2>
+          <p>
+            These terms govern your use of the 16px pixel art editor website
+            (16px.arbutuscode.ca). By accessing or using this site, you agree to
+            these terms. If you don't agree, please don't use the site.
+          </p>
+          <p>
+            16px is a free, browser-based pixel art editor operated by
+            <a
+              href="https://arbutuscode.ca"
+              target="_blank"
+              rel="noopener noreferrer">Arbutus Code</a
+            > in British Columbia, Canada.
+          </p>
+        </section>
+
+        <section>
+          <h2>What This Site Is</h2>
+          <p>
+            16px is a free pixel art creation tool that runs entirely in your
+            browser. You can draw, edit, import, and export pixel art — all
+            without creating an account or uploading anything to our servers.
+          </p>
+        </section>
+
+        <section>
+          <h2>The Pixel Art Editor</h2>
+          <p>The 16px editor:</p>
+          <ul>
+            <li>
+              <strong>Processes everything locally</strong> — your artwork never leaves
+              your browser or gets uploaded to any server
+            </li>
+            <li>Is provided "as is" without warranty</li>
+            <li>May be modified, updated, or removed at any time</li>
+            <li>Is free for personal and commercial use</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Your Content</h2>
+          <p>
+            Any pixel art you create using 16px belongs entirely to you. Since
+            all processing happens in your browser, we never have access to your
+            work unless you choose to share it with us.
+          </p>
+        </section>
+
+        <section>
+          <h2>Intellectual Property</h2>
+          <h3>Our Content</h3>
+          <p>
+            All original content on this site — including the 16px brand, user
+            interface design, and code — is owned by Arbutus Code unless
+            otherwise noted. You may not reproduce, distribute, or use this
+            content without permission.
+          </p>
+
+          <h3>Your Artwork</h3>
+          <p>
+            You retain full ownership of any artwork you create using 16px. We
+            make no claim to your creations.
+          </p>
+        </section>
+
+        <section>
+          <h2>Acceptable Use</h2>
+          <p>When using this site, please don't:</p>
+          <ul>
+            <li>Attempt to interfere with the site's operation or security</li>
+            <li>Use automated tools to scrape content</li>
+            <li>Misrepresent your identity or affiliation</li>
+            <li>Use the site for any unlawful purpose</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Disclaimer & Limitation of Liability</h2>
+          <p>
+            This website and its tools are provided "as is." We make no
+            warranties about accuracy, completeness, or reliability. We're not
+            liable for any damages arising from your use of this site, including
+            but not limited to loss of artwork or data.
+          </p>
+          <p>
+            Since all data is stored locally in your browser, we cannot recover
+            lost work. We recommend exporting and backing up your artwork
+            regularly.
+          </p>
+        </section>
+
+        <section>
+          <h2>External Links</h2>
+          <p>
+            This site may link to external websites. We're not responsible for
+            the content or practices of those sites.
+          </p>
+        </section>
+
+        <section>
+          <h2>Changes to These Terms</h2>
+          <p>
+            We may update these terms occasionally. Continued use of the site
+            after changes constitutes acceptance of the new terms. We'll update
+            the "last updated" date when changes are made.
+          </p>
+        </section>
+
+        <section>
+          <h2>Governing Law</h2>
+          <p>
+            These terms are governed by the laws of British Columbia, Canada.
+            Any disputes will be resolved in the courts of British Columbia.
+          </p>
+        </section>
+
+        <section>
+          <h2>Contact</h2>
+          <p>
+            Questions about these terms? Email us at
+            <a href="mailto:hello@arbutuscode.ca">hello@arbutuscode.ca</a>.
+          </p>
+        </section>
+      </article>
+    </main>
+
+    <PageFooter />
+  </div>
+
+  <style>
+    .legal-content section {
+      margin-bottom: 2rem;
+    }
+
+    .legal-content h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--color-text-bright);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-content h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .legal-content p {
+      color: var(--color-text-dim);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-content a {
+      color: var(--color-accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.15s;
+    }
+
+    .legal-content a:hover {
+      color: var(--color-accent-hover);
+    }
+
+    .legal-content ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-content li {
+      color: var(--color-text-dim);
+      line-height: 1.75;
+      margin-bottom: 0.25rem;
+    }
+
+    .legal-content strong {
+      color: var(--color-text);
+    }
+  </style>
+</Layout>

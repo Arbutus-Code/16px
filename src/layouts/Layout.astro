@@ -1,0 +1,70 @@
+---
+import "../styles/global.css";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  noindex?: boolean;
+}
+
+const siteUrl = "https://16px.arbutuscode.ca";
+
+const {
+  title = "16px - Pixel Art Editor",
+  description = "A fast, 100% client-side pixel art editor with drawing tools, import/export, touch support, and keyboard shortcuts.",
+  canonicalPath = "",
+  noindex = false,
+} = Astro.props;
+
+const canonicalURL = `${siteUrl}${canonicalPath}`;
+const socialImage = `${siteUrl}/favicon.svg`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow" />
+      )
+    }
+    <meta name="theme-color" content="#0a0a0f" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
+    <title>{title}</title>
+
+    <!-- Analytics -->
+    <link rel="preconnect" href="https://analytics.themapleleaf.dev" />
+    <script
+      is:inline
+      defer
+      src="https://analytics.themapleleaf.dev/script.js"
+      data-website-id="7463671f-b4e7-4de6-9e1c-54b3f3588b6a"></script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

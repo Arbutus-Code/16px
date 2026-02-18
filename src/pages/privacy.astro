@@ -1,0 +1,394 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import PageFooter from "../components/PageFooter.astro";
+---
+
+<Layout
+  title="Privacy Policy | 16px"
+  description="Learn how 16px handles your privacy, data collection, and analytics preferences."
+  canonicalPath="/privacy"
+>
+  <div class="min-h-screen bg-bg text-text flex flex-col">
+    <PageHeader />
+
+    <main class="flex-1 max-w-3xl mx-auto px-6 py-12 sm:py-16 w-full">
+      <article class="legal-content">
+        <header class="mb-12">
+          <h1
+            class="text-3xl sm:text-4xl font-bold text-text-bright tracking-tight"
+          >
+            Privacy Policy
+          </h1>
+          <p class="mt-3 text-text-dim text-sm">Last updated: February 2026</p>
+        </header>
+
+        <section>
+          <h2>The Short Version</h2>
+          <p>
+            We respect your privacy. We use privacy-focused analytics that don't
+            track you personally, our pixel art editor processes everything in
+            your browser (nothing gets uploaded), and we only collect personal
+            information when you voluntarily contact us.
+          </p>
+        </section>
+
+        <section>
+          <h2>Who We Are</h2>
+          <p>
+            16px is a free, browser-based pixel art editor operated by
+            <a
+              href="https://arbutuscode.ca"
+              target="_blank"
+              rel="noopener noreferrer">Arbutus Code</a
+            > in British Columbia, Canada. This policy covers how we handle information
+            on our website, 16px.arbutuscode.ca.
+          </p>
+          <p>
+            For questions about this policy, contact us at
+            <a href="mailto:hello@arbutuscode.ca">hello@arbutuscode.ca</a>.
+          </p>
+        </section>
+
+        <section>
+          <h2>Information We Collect</h2>
+
+          <h3>Analytics Data</h3>
+          <p>
+            We use <a
+              href="https://umami.is"
+              target="_blank"
+              rel="noopener noreferrer">Umami</a
+            >, a privacy-focused, self-hosted analytics platform. Umami is
+            designed to be GDPR and PIPEDA compliant by default.
+          </p>
+          <p><strong>What Umami collects:</strong></p>
+          <ul>
+            <li>Page views and referrer URLs</li>
+            <li>Browser type and operating system</li>
+            <li>Device type (desktop, mobile, tablet)</li>
+            <li>Country (derived from anonymized IP)</li>
+            <li>Session duration and bounce rate</li>
+          </ul>
+          <p><strong>What Umami does NOT collect:</strong></p>
+          <ul>
+            <li>Personal information or identifiers</li>
+            <li>IP addresses (they're anonymized and not stored)</li>
+            <li>Cookies or persistent tracking</li>
+            <li>Cross-site tracking</li>
+            <li>Fingerprinting data</li>
+          </ul>
+          <p>
+            Umami generates a random visitor ID for each session that cannot be
+            used to identify you personally. This data helps us understand how
+            people use our site so we can improve it.
+          </p>
+          <p>
+            Our Umami instance is self-hosted, meaning your analytics data stays
+            on our infrastructure and is never shared with third parties.
+          </p>
+
+          <h3>Browser-Based Editor</h3>
+          <p>
+            The 16px pixel art editor runs entirely in your browser.
+            <strong>Your artwork is never uploaded to our servers.</strong> All drawing,
+            editing, import, and export happens locally on your device.
+          </p>
+        </section>
+
+        <section>
+          <h2>How We Use Information</h2>
+          <ul>
+            <li>
+              <strong>Analytics:</strong> To understand site usage and improve the
+              user experience
+            </li>
+            <li>
+              <strong>Communications:</strong> To respond to inquiries if you contact
+              us
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Your Choices</h2>
+
+          <h3>Analytics Opt-Out</h3>
+          <p>
+            You can opt out of analytics tracking at any time using the
+            preference controls below. Your choice is saved in your browser and
+            respected on all pages.
+          </p>
+
+          <div class="analytics-toggle-card">
+            <h4>Analytics Preferences</h4>
+            <p class="toggle-description">
+              Control whether we collect anonymous usage data to improve the
+              site.
+            </p>
+            <div class="toggle-controls">
+              <button
+                type="button"
+                id="analytics-toggle"
+                class="toggle-btn"
+                data-enabled="true"
+              >
+                Loading...
+              </button>
+              <span id="analytics-status" class="toggle-status"></span>
+            </div>
+          </div>
+
+          <h3>Do Not Track</h3>
+          <p>
+            We respect the Do Not Track (DNT) browser setting. If your browser
+            sends a DNT signal, Umami will not track your visit.
+          </p>
+        </section>
+
+        <section>
+          <h2>Data Retention</h2>
+          <ul>
+            <li>
+              <strong>Analytics:</strong> Aggregated, anonymized data is retained
+              indefinitely for trend analysis
+            </li>
+            <li>
+              <strong>Communications:</strong> Retained for business records and to
+              provide ongoing support
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Data Security</h2>
+          <p>
+            We take reasonable measures to protect information, including using
+            HTTPS encryption for all site traffic. However, no internet
+            transmission is 100% secure.
+          </p>
+        </section>
+
+        <section>
+          <h2>Third-Party Services</h2>
+          <p>
+            We don't use third-party advertising, social media tracking pixels,
+            or embedded content that tracks you.
+          </p>
+        </section>
+
+        <section>
+          <h2>Children's Privacy</h2>
+          <p>
+            This site is not directed at children under 13. We don't knowingly
+            collect information from children.
+          </p>
+        </section>
+
+        <section>
+          <h2>Your Rights (PIPEDA)</h2>
+          <p>
+            Under Canada's Personal Information Protection and Electronic
+            Documents Act (PIPEDA), you have the right to:
+          </p>
+          <ul>
+            <li>Access personal information we hold about you</li>
+            <li>Request correction of inaccurate information</li>
+            <li>Withdraw consent for data collection</li>
+            <li>File a complaint with the Privacy Commissioner of Canada</li>
+          </ul>
+          <p>
+            To exercise these rights, contact us at
+            <a href="mailto:hello@arbutuscode.ca">hello@arbutuscode.ca</a>.
+          </p>
+        </section>
+
+        <section>
+          <h2>Changes to This Policy</h2>
+          <p>
+            We may update this policy occasionally. We'll update the "last
+            updated" date when changes are made. Continued use of the site after
+            changes constitutes acceptance.
+          </p>
+        </section>
+
+        <section>
+          <h2>Contact</h2>
+          <p>
+            Questions or concerns about privacy? Email us at
+            <a href="mailto:hello@arbutuscode.ca">hello@arbutuscode.ca</a>.
+          </p>
+        </section>
+      </article>
+    </main>
+
+    <PageFooter />
+  </div>
+
+  <style>
+    .legal-content section {
+      margin-bottom: 2rem;
+    }
+
+    .legal-content h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--color-text-bright);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-content h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .legal-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text-bright);
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-content p {
+      color: var(--color-text-dim);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-content a {
+      color: var(--color-accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.15s;
+    }
+
+    .legal-content a:hover {
+      color: var(--color-accent-hover);
+    }
+
+    .legal-content ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-content li {
+      color: var(--color-text-dim);
+      line-height: 1.75;
+      margin-bottom: 0.25rem;
+    }
+
+    .legal-content strong {
+      color: var(--color-text);
+    }
+
+    .analytics-toggle-card {
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-raised);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .toggle-description {
+      font-size: 0.875rem;
+      color: var(--color-text-dim);
+      margin-bottom: 1rem;
+    }
+
+    .toggle-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .toggle-btn {
+      padding: 0.5rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      font-family: var(--font-mono);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-panel);
+      color: var(--color-text);
+      cursor: pointer;
+      border-radius: 4px;
+      transition:
+        border-color 0.15s,
+        color 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--color-border-bright);
+      color: var(--color-text-bright);
+    }
+
+    .toggle-status {
+      font-size: 0.8125rem;
+      color: var(--color-text-dim);
+    }
+  </style>
+
+  <script>
+    function initAnalyticsToggle() {
+      const toggle = document.getElementById(
+        "analytics-toggle",
+      ) as HTMLButtonElement;
+      const status = document.getElementById("analytics-status") as HTMLElement;
+
+      if (!toggle || !status) return;
+
+      const STORAGE_KEY = "analytics-consent";
+      const UMAMI_DISABLED_KEY = "umami.disabled";
+
+      function getConsent(): boolean {
+        const umamiDisabled = localStorage.getItem(UMAMI_DISABLED_KEY);
+        if (umamiDisabled === "1") return false;
+
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored === null ? true : stored === "true";
+      }
+
+      function setConsent(enabled: boolean) {
+        localStorage.setItem(STORAGE_KEY, String(enabled));
+
+        if (!enabled) {
+          localStorage.setItem(UMAMI_DISABLED_KEY, "1");
+        } else {
+          localStorage.removeItem(UMAMI_DISABLED_KEY);
+        }
+
+        updateUI(enabled);
+
+        window.dispatchEvent(
+          new CustomEvent("analytics-consent-change", {
+            detail: { enabled },
+          }),
+        );
+      }
+
+      function updateUI(enabled: boolean) {
+        toggle.textContent = enabled ? "Opt Out" : "Opt In";
+        toggle.dataset.enabled = String(enabled);
+        status.textContent = enabled
+          ? "Analytics are currently enabled"
+          : "Analytics are currently disabled";
+      }
+
+      const currentConsent = getConsent();
+      updateUI(currentConsent);
+
+      toggle.addEventListener("click", () => {
+        const currentlyEnabled = toggle.dataset.enabled === "true";
+        setConsent(!currentlyEnabled);
+      });
+    }
+
+    initAnalyticsToggle();
+  </script>
+</Layout>

@@ -48,6 +48,8 @@ test.describe("16px editor", () => {
     });
 
     test("keyboard shortcuts switch tools", async ({ page }) => {
+      // Use desktop viewport so the canvas isn't obscured by the header
+      await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto("/");
 
       // Click the canvas first so keyboard events reach the window handler
@@ -94,6 +96,8 @@ test.describe("16px editor", () => {
 
   test.describe("canvas drawing", () => {
     test("draws on canvas and supports undo/redo", async ({ page }) => {
+      // Use desktop viewport so the canvas isn't obscured by the header
+      await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto("/");
 
       const canvas = page.getByLabel(/Pixel art canvas/i);

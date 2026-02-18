@@ -1,0 +1,96 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageFooter from "../components/PageFooter.astro";
+---
+
+<Layout
+  title="500 — Server Error | 16px"
+  description="Something went wrong. We're working to fix it."
+  noindex
+>
+  <div class="min-h-screen bg-bg text-text flex flex-col">
+    <main class="flex-1 flex items-center justify-center px-6 py-16">
+      <div class="max-w-md text-center">
+        <div class="mb-8">
+          <!-- Pixel-art style X / error pattern -->
+          <div
+            class="inline-grid grid-cols-8 gap-px mb-6"
+            aria-hidden="true"
+            role="img"
+          >
+            {
+              [
+                1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0,
+                1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+                1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0,
+                1,
+              ].map((on) => (
+                <div
+                  class={`w-3 h-3 sm:w-4 sm:h-4 ${on ? "bg-warning" : "bg-bg-panel"}`}
+                />
+              ))
+            }
+          </div>
+
+          <h1
+            class="text-6xl sm:text-7xl font-bold text-warning mb-3 font-mono tracking-tighter"
+          >
+            500
+          </h1>
+          <div class="w-16 h-0.5 bg-warning mx-auto"></div>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl font-bold text-text-bright mb-3">
+          Canvas Corrupted
+        </h2>
+
+        <p class="text-text-dim mb-6 leading-relaxed">
+          Something went wrong on our end. The error has been logged and we're
+          working on a fix.
+        </p>
+
+        <div
+          class="border border-border bg-bg-raised p-4 mb-8 text-left"
+          style="border-radius: 6px;"
+        >
+          <p class="text-xs text-text-dim font-mono">
+            <span class="text-warning">▸</span> Error logged
+          </p>
+          <p class="text-xs text-text-dim font-mono mt-1">
+            <span class="text-warning">▸</span> Investigation in progress
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="/"
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-accent text-bg text-sm font-mono font-medium uppercase tracking-wider hover:bg-accent-hover transition-colors"
+            style="border-radius: 4px;"
+          >
+            ← Back to Editor
+          </a>
+          <button
+            onclick="window.location.reload()"
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-border text-text-dim text-sm font-mono font-medium uppercase tracking-wider hover:border-border-bright hover:text-text transition-colors"
+            style="border-radius: 4px;"
+          >
+            Retry
+          </button>
+        </div>
+
+        <div class="mt-12 pt-6 border-t border-border">
+          <p class="text-xs text-text-dim">
+            If this keeps happening, please
+            <a
+              href="mailto:hello@arbutuscode.ca"
+              class="text-accent underline underline-offset-2 hover:text-accent-hover transition-colors"
+              >report the issue</a
+            >.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <PageFooter />
+  </div>
+</Layout>

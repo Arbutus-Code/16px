@@ -5,6 +5,12 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+  output: "static",
+  site: "https://16px.arbutuscode.ca",
+  trailingSlash: "never",
+  build: {
+    format: "file",
+  },
   integrations: [svelte()],
   vite: {
     plugins: [tailwindcss()],

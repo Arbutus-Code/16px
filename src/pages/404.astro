@@ -1,0 +1,78 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageFooter from "../components/PageFooter.astro";
+---
+
+<Layout
+  title="404 — Page Not Found | 16px"
+  description="The page you're looking for doesn't exist."
+  noindex
+>
+  <div class="min-h-screen bg-bg text-text flex flex-col">
+    <main class="flex-1 flex items-center justify-center px-6 py-16">
+      <div class="max-w-md text-center">
+        <div class="mb-8">
+          <!-- Pixel-art style 404 grid -->
+          <div
+            class="inline-grid grid-cols-8 gap-px mb-6"
+            aria-hidden="true"
+            role="img"
+          >
+            {
+              /* 8x8 pixel art question mark pattern using accent color */
+              [
+                0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+                0,
+              ].map((on) => (
+                <div
+                  class={`w-3 h-3 sm:w-4 sm:h-4 ${on ? "bg-accent" : "bg-bg-panel"}`}
+                />
+              ))
+            }
+          </div>
+
+          <h1
+            class="text-6xl sm:text-7xl font-bold text-accent mb-3 font-mono tracking-tighter"
+          >
+            404
+          </h1>
+          <div class="w-16 h-0.5 bg-accent mx-auto"></div>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl font-bold text-text-bright mb-3">
+          Pixel Not Found
+        </h2>
+
+        <p class="text-text-dim mb-10 leading-relaxed">
+          This pixel seems to have wandered off the canvas. The page you're
+          looking for doesn't exist or has been moved.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="/"
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-accent text-bg text-sm font-mono font-medium uppercase tracking-wider hover:bg-accent-hover transition-colors"
+            style="border-radius: 4px;"
+          >
+            ← Back to Editor
+          </a>
+        </div>
+
+        <div class="mt-12 pt-6 border-t border-border">
+          <p class="text-xs text-text-dim">
+            If you believe this is an error, please
+            <a
+              href="mailto:hello@arbutuscode.ca"
+              class="text-accent underline underline-offset-2 hover:text-accent-hover transition-colors"
+              >contact us</a
+            >.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <PageFooter />
+  </div>
+</Layout>

@@ -1,0 +1,21 @@
+---
+/**
+ * Shared page header for non-editor pages (privacy, terms, error pages).
+ * The editor has its own header built into Editor.svelte.
+ */
+---
+
+<header
+  class="flex items-center justify-between px-6 py-4 border-b border-border"
+>
+  <a href="/" class="flex items-center gap-3 no-underline">
+    <span class="text-lg font-bold text-text-bright tracking-tight font-mono">
+      <span class="text-accent">16</span><span class="text-text-dim">px</span>
+    </span>
+  </a>
+  <a
+    href="/"
+    class="text-xs text-text-dim uppercase tracking-wider hover:text-text transition-colors no-underline"
+    >← Back to Editor</a
+  >
+</header>

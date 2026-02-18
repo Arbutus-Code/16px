@@ -5,6 +5,7 @@
   import BackgroundControls from "./BackgroundControls.svelte";
   import Toolbar from "./Toolbar.svelte";
   import ImportExport from "./ImportExport.svelte";
+  import ConsentBanner from "./ConsentBanner.svelte";
   import { editorState } from "./stores.svelte";
 
   let isMobileColorOverlayOpen = $state(false);
@@ -125,4 +126,32 @@
       </div>
     </div>
   {/if}
+
+  <footer
+    class="shrink-0 border-t border-border px-4 py-2 flex items-center justify-center gap-3 text-[10px] text-text-dim font-mono"
+  >
+    <a
+      href="/terms"
+      class="hover:text-text transition-colors no-underline text-text-dim"
+      >Terms</a
+    >
+    <span class="text-border">·</span>
+    <a
+      href="/privacy"
+      class="hover:text-text transition-colors no-underline text-text-dim"
+      >Privacy</a
+    >
+    <span class="text-border">·</span>
+    <span
+      >© {new Date().getFullYear()}
+      <a
+        href="https://arbutuscode.ca"
+        class="hover:text-text transition-colors no-underline text-text-dim"
+        target="_blank"
+        rel="noopener noreferrer">Arbutus Code</a
+      ></span
+    >
+  </footer>
+
+  <ConsentBanner />
 </div>
