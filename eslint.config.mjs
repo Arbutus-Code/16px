@@ -1,6 +1,9 @@
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import astro from "eslint-plugin-astro";
+import svelte from "eslint-plugin-svelte";
+import svelteConfig from "./svelte.config.js";
 
 export default [
   {
@@ -11,8 +14,6 @@ export default [
       "coverage/**",
       "playwright-report/**",
       "test-results/**",
-      "**/*.astro",
-      "**/*.svelte",
     ],
   },
   js.configs.recommended,
@@ -26,10 +27,44 @@ export default [
       },
     },
   },
+  // Astro configuration
+  ...astro.configs.recommended,
   {
-    files: ["**/*.svelte.ts"],
+    files: ["**/*.astro"],
+    languageOptions: {
+      parser: astro.parser,
+      parserOptions: {
+        parser: tseslint.parser,
+        extraFileExtensions: [".astro"],
+        sourceType: "module",
+        ecmaVersion: "latest",
+        project: "./tsconfig.json",
+      },
+    },
+    rules: {
+      "no-undef": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  // Svelte configuration
+  ...svelte.configs.recommended,
+  {
+    files: ["**/*.svelte", "**/*.svelte.js", "**/*.svelte.ts"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parserOptions: {
+        parser: tseslint.parser,
+        svelteConfig,
+      },
+    },
     rules: {
       "prefer-const": "off",
+      "svelte/prefer-svelte-reactivity": "off",
+      "svelte/require-each-key": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
     },
   },
 ];
