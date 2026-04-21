@@ -16,7 +16,6 @@
   let wrapperEl: HTMLDivElement;
   let isDrawing = false;
   let lastCell: { x: number; y: number } | null = null;
-  let displaySize = $state(512);
 
   const CANVAS_RENDER_SIZE = 512;
 
@@ -308,7 +307,7 @@
   <canvas
     bind:this={canvasEl}
     class="border border-border cursor-crosshair select-none max-w-full touch-none"
-    style="width: min(100%, {displaySize}px); height: auto; aspect-ratio: 1 / 1; image-rendering: pixelated;"
+    style="width: min(100%, 512px); height: auto; aspect-ratio: 1 / 1; image-rendering: pixelated;"
     onmousedown={onMouseDown}
     ontouchstart={onTouchStart}
     ontouchmove={onTouchMove}

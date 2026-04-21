@@ -62,18 +62,30 @@ function applySnapshot(snap: Snapshot) {
   bumpRender();
 }
 
+/**
+ * Captures current canvas state and pushes it to the undo stack.
+ * Clears the redo stack since a new action invalidates forward history.
+ */
 export function pushUndo() {
   undoStack.push(takeSnapshot());
   if (undoStack.length > MAX_UNDO) undoStack.shift();
   redoStack.length = 0;
 }
 
+/**
+ * Restores the previous canvas state from the undo stack.
+ * Pushes current state to redo stack to enable redo.
+ */
 export function undo() {
   if (undoStack.length === 0) return;
   redoStack.push(takeSnapshot());
   applySnapshot(undoStack.pop()!);
 }
 
+/**
+ * Restores the next canvas state from the redo stack.
+ * Pushes current state to undo stack to maintain history.
+ */
 export function redo() {
   if (redoStack.length === 0) return;
   undoStack.push(takeSnapshot());
@@ -88,6 +100,13 @@ export function canRedo(): boolean {
   return redoStack.length > 0;
 }
 
+/**
+ * Changes the canvas grid size while preserving existing pixel data.
+ * Copies pixels from the old grid to the new grid (top-left aligned).
+ * Creates an undo snapshot before resizing.
+ *
+ * @param size - New grid size in pixels (must be positive)
+ */
 export function setGridSize(size: number) {
   if (size === editorState.gridSize) return;
   pushUndo();
@@ -144,6 +163,15 @@ export function getPixel(x: number, y: number): string {
   return "transparent";
 }
 
+/**
+ * Fills a contiguous region with the specified color using iterative flood fill.
+ * Replaces all connected pixels of the same color starting from (startX, startY).
+ * Uses a stack-based approach to avoid recursion limits on large canvases.
+ *
+ * @param startX - X coordinate of the starting pixel
+ * @param startY - Y coordinate of the starting pixel
+ * @param fillColor - Color to apply to the filled region
+ */
 export function floodFill(startX: number, startY: number, fillColor: string) {
   const size = editorState.gridSize;
   const targetColor = editorState.pixels[startY][startX];
@@ -167,6 +195,14 @@ export function floodFill(startX: number, startY: number, fillColor: string) {
   bumpRender();
 }
 
+/**
+ * Imports pixel data from a Canvas ImageData object into the editor.
+ * Converts RGBA values to hex colors (or rgba() for partial transparency).
+ * Fully transparent pixels (alpha=0) become "transparent".
+ *
+ * @param imageData - Canvas ImageData containing RGBA pixel values
+ * @param targetSize - Grid size to import (should match imageData dimensions)
+ */
 export function loadPixelsFromImageData(
   imageData: ImageData,
   targetSize: number,
@@ -195,6 +231,14 @@ export function loadPixelsFromImageData(
   bumpRender();
 }
 
+/**
+ * Converts a hex color to rgba format with the specified alpha value.
+ * Returns the original hex if alpha is 1 or greater (no transparency needed).
+ *
+ * @param hex - Hex color string (format: #RRGGBB)
+ * @param alpha - Alpha value between 0 and 1
+ * @returns rgba() string or original hex if alpha >= 1
+ */
 export function hexToRgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
