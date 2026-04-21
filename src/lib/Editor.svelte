@@ -83,7 +83,7 @@
 
     <aside
       aria-label="Color controls"
-      class="hidden lg:flex w-full lg:w-64 xl:w-72 2xl:w-80 border-t lg:border-t-0 lg:border-l border-border p-5 lg:p-5 flex flex-col gap-6 order-3 shrink-0 lg:min-w-[16rem] lg:overflow-y-auto lg:h-full"
+      class="w-full lg:w-64 xl:w-72 2xl:w-80 border-t lg:border-t-0 lg:border-l border-border p-5 lg:p-5 hidden lg:flex flex-col gap-6 order-3 shrink-0 lg:min-w-[16rem] lg:overflow-y-auto lg:h-full"
     >
       <ColorPicker />
       <div class="border-t border-border pt-5">
