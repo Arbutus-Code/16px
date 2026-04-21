@@ -58,7 +58,7 @@ function takeSnapshot(): Snapshot {
 
 function applySnapshot(snap: Snapshot) {
   editorState.gridSize = snap.gridSize;
-  editorState.pixels = snap.pixels;
+  editorState.pixels = clonePixels(snap.pixels);
   bumpRender();
 }
 
