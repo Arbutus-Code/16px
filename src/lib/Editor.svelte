@@ -70,18 +70,20 @@
     <section
       id="main-canvas"
       aria-label="Canvas workspace"
-      class="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-10 order-1 lg:order-2 bg-bg min-w-0 lg:overflow-y-auto lg:h-full"
+      class="flex-1 flex flex-col items-center p-4 sm:p-8 lg:p-10 order-1 lg:order-2 bg-bg min-w-0 lg:overflow-y-auto lg:h-full"
       style="min-height: 540px;"
     >
       <div class="w-full max-w-[960px] flex flex-col items-center gap-6">
-        <PixelCanvas />
+        <div class="flex-1 flex items-center justify-center w-full">
+          <PixelCanvas />
+        </div>
         <CanvasPreviewStrip />
       </div>
     </section>
 
     <aside
       aria-label="Color controls"
-      class="hidden lg:flex w-full lg:w-64 xl:w-72 2xl:w-80 border-t lg:border-t-0 lg:border-l border-border p-5 lg:p-5 flex-col gap-6 order-3 shrink-0 lg:min-w-[16rem] lg:overflow-y-auto lg:h-full"
+      class="hidden lg:flex w-full lg:w-64 xl:w-72 2xl:w-80 border-t lg:border-t-0 lg:border-l border-border p-5 lg:p-5 flex flex-col gap-6 order-3 shrink-0 lg:min-w-[16rem] lg:overflow-y-auto lg:h-full"
     >
       <ColorPicker />
       <div class="border-t border-border pt-5">
