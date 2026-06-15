@@ -61,7 +61,7 @@
       <p class="consent-text">
         We use privacy-focused analytics to understand how visitors use this
         site.
-        <a href="/privacy" class="consent-link">Read our privacy policy</a>
+        <a href="/privacy/" class="consent-link">Read our privacy policy</a>
       </p>
       <div class="consent-actions">
         <button

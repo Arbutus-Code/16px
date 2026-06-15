@@ -133,13 +133,13 @@
     class="shrink-0 border-t border-border px-4 py-2 flex items-center justify-center gap-3 text-[10px] text-text-dim font-mono"
   >
     <a
-      href="/terms"
+      href="/terms/"
       class="hover:text-text transition-colors no-underline text-text-dim"
       >Terms</a
     >
     <span class="text-border">·</span>
     <a
-      href="/privacy"
+      href="/privacy/"
       class="hover:text-text transition-colors no-underline text-text-dim"
       >Privacy</a
     >

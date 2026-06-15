@@ -3,15 +3,14 @@ import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
   output: "static",
   site: "https://16px.arbutuscode.ca",
-  trailingSlash: "never",
-  build: {
-    format: "file",
-  },
-  integrations: [svelte()],
+  trailingSlash: "always",
+  integrations: [svelte(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
   },
