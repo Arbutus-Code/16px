@@ -1,0 +1,16 @@
+---
+interface Props {
+  /** Flattened 8x8 bitmap; 1 = filled, 0 = empty. */
+  pattern: number[];
+  tone?: "accent" | "warning";
+}
+
+const { pattern, tone = "accent" } = Astro.props;
+const fill = tone === "warning" ? "bg-warning" : "bg-accent";
+---
+
+<div class="inline-grid grid-cols-8 gap-px mb-6" aria-hidden="true">
+  {pattern.map((on) => (
+    <div class={`w-3 h-3 sm:w-4 sm:h-4 ${on ? fill : "bg-bg-panel"}`} />
+  ))}
+</div>
