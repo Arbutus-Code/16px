@@ -8,7 +8,7 @@ export interface Props {
   noindex?: boolean;
 }
 
-const siteUrl = "https://16px.arbutuscode.ca";
+const siteUrl = Astro.site?.origin ?? "https://16px.arbutuscode.ca";
 
 const {
   title = "16px - Pixel Art Editor",
@@ -35,13 +35,11 @@ const socialImage = `${siteUrl}/favicon.svg`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
     <meta name="description" content={description} />
-    {
-      noindex ? (
-        <meta name="robots" content="noindex, nofollow" />
-      ) : (
-        <meta name="robots" content="index, follow" />
-      )
-    }
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
     <meta name="theme-color" content="#0a0a0f" />
 
     <meta property="og:type" content="website" />
@@ -63,7 +61,8 @@ const socialImage = `${siteUrl}/favicon.svg`;
       is:inline
       defer
       src="https://analytics.themapleleaf.dev/script.js"
-      data-website-id="7463671f-b4e7-4de6-9e1c-54b3f3588b6a"></script>
+      data-website-id="7463671f-b4e7-4de6-9e1c-54b3f3588b6a"
+    ></script>
   </head>
   <body>
     <slot />
