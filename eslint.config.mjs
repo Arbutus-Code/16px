@@ -3,6 +3,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import astro from "eslint-plugin-astro";
 import svelte from "eslint-plugin-svelte";
+import prettier from "eslint-config-prettier";
 import svelteConfig from "./svelte.config.js";
 
 export default [
@@ -67,4 +68,5 @@ export default [
       "@typescript-eslint/no-unused-expressions": "off",
     },
   },
+  prettier,
 ];
