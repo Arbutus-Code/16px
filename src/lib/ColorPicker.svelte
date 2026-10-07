@@ -1,185 +1,30 @@
 <script lang="ts">
   import { editorState, DEFAULT_PALETTE } from "./stores.svelte";
+  import {
+    hexToRgb,
+    rgbToHex,
+    rgbToHsl,
+    hslToRgb,
+    rgbToHsv,
+    hsvToRgb,
+  } from "./color";
 
   type ColorTarget = "current" | "background";
-  let {
-    target = "current",
-    autoCloseOnSelect = false,
-    onClose,
-  }: {
-    target?: ColorTarget;
-    autoCloseOnSelect?: boolean;
-    onClose?: () => void;
-  } = $props();
+  type Mode = "hex" | "rgb" | "hsl";
+
+  let { target = "current" }: { target?: ColorTarget } = $props();
 
   let hexInput = $state(editorState.currentColor);
-  let mode = $state<"hex" | "rgb" | "hsl">("hex");
+  let mode = $state<Mode>("hex");
   let mixerEl: HTMLDivElement;
   let isDraggingMixer = false;
   let hue = $state(0);
   let saturation = $state(1);
   let value = $state(1);
 
-  function hexToRgb(hex: string): { r: number; g: number; b: number } {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return { r, g, b };
-  }
-
-  function rgbToHex(r: number, g: number, b: number): string {
-    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-  }
-
-  function rgbToHsl(
-    r: number,
-    g: number,
-    b: number,
-  ): { h: number; s: number; l: number } {
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    const max = Math.max(r, g, b),
-      min = Math.min(r, g, b);
-    let h = 0,
-      s = 0;
-    const l = (max + min) / 2;
-    if (max !== min) {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-          break;
-        case g:
-          h = ((b - r) / d + 2) / 6;
-          break;
-        case b:
-          h = ((r - g) / d + 4) / 6;
-          break;
-      }
-    }
-    return {
-      h: Math.round(h * 360),
-      s: Math.round(s * 100),
-      l: Math.round(l * 100),
-    };
-  }
-
-  function hslToRgb(
-    h: number,
-    s: number,
-    l: number,
-  ): { r: number; g: number; b: number } {
-    h /= 360;
-    s /= 100;
-    l /= 100;
-    let r: number, g: number, b: number;
-    if (s === 0) {
-      r = g = b = l;
-    } else {
-      const hue2rgb = (p: number, q: number, t: number) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      };
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-    }
-    return {
-      r: Math.round(r * 255),
-      g: Math.round(g * 255),
-      b: Math.round(b * 255),
-    };
-  }
-
-  function rgbToHsv(
-    r: number,
-    g: number,
-    b: number,
-  ): { h: number; s: number; v: number } {
-    r /= 255;
-    g /= 255;
-    b /= 255;
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const d = max - min;
-
-    let h = 0;
-    const s = max === 0 ? 0 : d / max;
-    const v = max;
-
-    if (d !== 0) {
-      switch (max) {
-        case r:
-          h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
-          break;
-        case g:
-          h = ((b - r) / d + 2) * 60;
-          break;
-        case b:
-          h = ((r - g) / d + 4) * 60;
-          break;
-      }
-    }
-
-    return {
-      h: Math.round(h),
-      s,
-      v,
-    };
-  }
-
-  function hsvToRgb(
-    h: number,
-    s: number,
-    v: number,
-  ): { r: number; g: number; b: number } {
-    const c = v * s;
-    const hp = h / 60;
-    const x = c * (1 - Math.abs((hp % 2) - 1));
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    if (hp >= 0 && hp < 1) {
-      r = c;
-      g = x;
-    } else if (hp >= 1 && hp < 2) {
-      r = x;
-      g = c;
-    } else if (hp >= 2 && hp < 3) {
-      g = c;
-      b = x;
-    } else if (hp >= 3 && hp < 4) {
-      g = x;
-      b = c;
-    } else if (hp >= 4 && hp < 5) {
-      r = x;
-      b = c;
-    } else {
-      r = c;
-      b = x;
-    }
-
-    const m = v - c;
-    return {
-      r: Math.round((r + m) * 255),
-      g: Math.round((g + m) * 255),
-      b: Math.round((b + m) * 255),
-    };
-  }
-
-  function clamp01(num: number): number {
-    return Math.max(0, Math.min(1, num));
-  }
+  const clamp = (n: number, min: number, max: number) =>
+    Math.max(min, Math.min(max, n));
+  const clamp01 = (n: number) => clamp(n, 0, 1);
 
   function getSelectedColor(): string {
     if (target === "background") {
@@ -193,21 +38,17 @@
   function setSelectedColor(color: string) {
     if (target === "background") {
       editorState.bgColor = color;
-      return;
+    } else {
+      editorState.currentColor = color;
     }
-    editorState.currentColor = color;
-  }
-
-  function maybeClosePicker() {
-    if (autoCloseOnSelect) onClose?.();
   }
 
   let selectedColor = $derived(getSelectedColor());
   let rgb = $derived(hexToRgb(selectedColor));
-  let hsl = $derived(rgbToHsl(rgb.r, rgb.g, rgb.b));
+  let hsl = $derived(rgbToHsl(rgb));
 
-  function setFromHex(value: string) {
-    const cleaned = value.startsWith("#") ? value : `#${value}`;
+  function setFromHex(input: string) {
+    const cleaned = input.startsWith("#") ? input : `#${input}`;
     if (/^#[0-9a-fA-F]{6}$/.test(cleaned)) {
       setSelectedColor(cleaned.toLowerCase());
       hexInput = cleaned.toLowerCase();
@@ -215,22 +56,33 @@
   }
 
   function setFromRgb(r: number, g: number, b: number) {
-    r = Math.max(0, Math.min(255, r));
-    g = Math.max(0, Math.min(255, g));
-    b = Math.max(0, Math.min(255, b));
-    const color = rgbToHex(r, g, b);
+    const color = rgbToHex({
+      r: clamp(r, 0, 255),
+      g: clamp(g, 0, 255),
+      b: clamp(b, 0, 255),
+    });
     setSelectedColor(color);
     hexInput = color;
   }
 
   function setFromHsl(h: number, s: number, l: number) {
-    h = Math.max(0, Math.min(360, h));
-    s = Math.max(0, Math.min(100, s));
-    l = Math.max(0, Math.min(100, l));
-    const { r, g, b } = hslToRgb(h, s, l);
-    const color = rgbToHex(r, g, b);
+    const color = rgbToHex(
+      hslToRgb({
+        h: clamp(h, 0, 360),
+        s: clamp(s, 0, 100),
+        l: clamp(l, 0, 100),
+      }),
+    );
     setSelectedColor(color);
     hexInput = color;
+  }
+
+  function setFromHsv(h: number, s: number, v: number) {
+    hue = clamp(h, 0, 360);
+    saturation = clamp01(s);
+    value = clamp01(v);
+    const { r, g, b } = hsvToRgb({ h: hue, s: saturation, v: value });
+    setFromRgb(r, g, b);
   }
 
   function selectPaletteColor(color: string) {
@@ -239,52 +91,27 @@
     if (target === "current") {
       editorState.currentAlpha = 1;
     }
-    maybeClosePicker();
-  }
-
-  function setFromHsv(h: number, s: number, v: number) {
-    const nextHue = Math.max(0, Math.min(360, h));
-    const nextSat = clamp01(s);
-    const nextVal = clamp01(v);
-    const { r, g, b } = hsvToRgb(nextHue, nextSat, nextVal);
-    hue = nextHue;
-    saturation = nextSat;
-    value = nextVal;
-    setFromRgb(r, g, b);
   }
 
   function updateMixerFromPointer(clientX: number, clientY: number) {
     if (!mixerEl) return;
     const rect = mixerEl.getBoundingClientRect();
-    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
-    const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
-    const nextSat = rect.width === 0 ? 0 : x / rect.width;
-    const nextVal = rect.height === 0 ? 0 : 1 - y / rect.height;
+    const nextSat =
+      rect.width === 0 ? 0 : clamp01((clientX - rect.left) / rect.width);
+    const nextVal =
+      rect.height === 0 ? 0 : clamp01(1 - (clientY - rect.top) / rect.height);
     setFromHsv(hue, nextSat, nextVal);
   }
 
   function onMixerPointerDown(e: PointerEvent) {
     e.preventDefault();
     updateMixerFromPointer(e.clientX, e.clientY);
-    if (autoCloseOnSelect) {
-      maybeClosePicker();
-      return;
-    }
     isDraggingMixer = true;
-  }
-
-  function onWindowPointerMove(e: PointerEvent) {
-    if (!isDraggingMixer) return;
-    updateMixerFromPointer(e.clientX, e.clientY);
-  }
-
-  function onWindowPointerUp() {
-    isDraggingMixer = false;
   }
 
   $effect(() => {
     hexInput = selectedColor;
-    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+    const hsv = rgbToHsv(rgb);
     hue = hsv.h;
     saturation = hsv.s;
     value = hsv.v;
@@ -292,9 +119,10 @@
 </script>
 
 <svelte:window
-  onpointermove={onWindowPointerMove}
-  onpointerup={onWindowPointerUp}
-  onpointercancel={onWindowPointerUp}
+  onpointermove={(e) =>
+    isDraggingMixer && updateMixerFromPointer(e.clientX, e.clientY)}
+  onpointerup={() => (isDraggingMixer = false)}
+  onpointercancel={() => (isDraggingMixer = false)}
 />
 
 <div class="flex flex-col gap-3">
@@ -309,8 +137,8 @@
     <div class="flex-1 flex flex-col gap-2 min-w-0">
       <div
         bind:this={mixerEl}
-        class="relative w-full aspect-square border border-border-bright cursor-crosshair select-none"
-        style="background-color: hsl({hue} 100% 50%); border-radius: 4px;"
+        class="relative w-full aspect-square border border-border-bright cursor-crosshair select-none rounded"
+        style="background-color: hsl({hue} 100% 50%);"
         onpointerdown={onMixerPointerDown}
         role="application"
         aria-label="Color mixer"
@@ -339,14 +167,12 @@
           min="0"
           max="360"
           value={hue}
-          oninput={(e) => {
+          oninput={(e) =>
             setFromHsv(
               parseInt((e.target as HTMLInputElement).value),
               saturation,
               value,
-            );
-            maybeClosePicker();
-          }}
+            )}
           class="flex-1 min-w-0 accent-accent-secondary"
           aria-label="Hue"
         />
@@ -360,12 +186,11 @@
   <div class="flex gap-1">
     {#each ["hex", "rgb", "hsl"] as m}
       <button
-        class="flex-1 px-2 py-1 text-xs uppercase tracking-wider border {mode ===
+        class="flex-1 px-2 py-1 text-xs uppercase tracking-wider border rounded {mode ===
         m
           ? 'border-accent bg-accent text-bg font-bold'
           : 'border-border text-text-dim hover:border-border-bright'}"
-        style="border-radius: 4px;"
-        onclick={() => (mode = m as "hex" | "rgb" | "hsl")}
+        onclick={() => (mode = m as Mode)}
         aria-pressed={mode === m}
       >
         {m}
@@ -378,34 +203,31 @@
       type="text"
       value={hexInput}
       oninput={(e) => {
-        const target = e.target as HTMLInputElement;
-        hexInput = target.value;
-        setFromHex(target.value);
+        const input = e.target as HTMLInputElement;
+        hexInput = input.value;
+        setFromHex(input.value);
       }}
-      class="w-full px-2 py-1.5 bg-bg-input border border-border text-text text-sm font-mono"
-      style="border-radius: 4px;"
+      class="w-full px-2 py-1.5 bg-bg-input border border-border text-text text-sm font-mono rounded"
       placeholder="#ff3e3e"
       aria-label="Hex color value"
     />
   {:else if mode === "rgb"}
     <div class="grid grid-cols-3 gap-1">
-      {#each [["R", rgb.r], ["G", rgb.g], ["B", rgb.b]] as [label, value]}
+      {#each [["R", rgb.r], ["G", rgb.g], ["B", rgb.b]] as [label, channel]}
         <div class="flex flex-col gap-0.5">
           <span class="text-xs text-text-dim uppercase">{label}</span>
           <input
             type="number"
             min="0"
             max="255"
-            {value}
+            value={channel}
             oninput={(e) => {
-              const target = e.target as HTMLInputElement;
-              const v = parseInt(target.value) || 0;
+              const v = parseInt((e.target as HTMLInputElement).value) || 0;
               if (label === "R") setFromRgb(v, rgb.g, rgb.b);
               else if (label === "G") setFromRgb(rgb.r, v, rgb.b);
               else setFromRgb(rgb.r, rgb.g, v);
             }}
-            class="w-full px-1.5 py-1 bg-bg-input border border-border text-text text-sm font-mono"
-            style="border-radius: 4px;"
+            class="w-full px-1.5 py-1 bg-bg-input border border-border text-text text-sm font-mono rounded"
             aria-label="{label} value"
           />
         </div>
@@ -413,23 +235,21 @@
     </div>
   {:else}
     <div class="grid grid-cols-3 gap-1">
-      {#each [["H", hsl.h, 360], ["S", hsl.s, 100], ["L", hsl.l, 100]] as [label, value, max]}
+      {#each [["H", hsl.h, 360], ["S", hsl.s, 100], ["L", hsl.l, 100]] as [label, channel, max]}
         <div class="flex flex-col gap-0.5">
           <span class="text-xs text-text-dim uppercase">{label}</span>
           <input
             type="number"
             min="0"
             {max}
-            {value}
+            value={channel}
             oninput={(e) => {
-              const target = e.target as HTMLInputElement;
-              const v = parseInt(target.value) || 0;
+              const v = parseInt((e.target as HTMLInputElement).value) || 0;
               if (label === "H") setFromHsl(v, hsl.s, hsl.l);
               else if (label === "S") setFromHsl(hsl.h, v, hsl.l);
               else setFromHsl(hsl.h, hsl.s, v);
             }}
-            class="w-full px-1.5 py-1 bg-bg-input border border-border text-text text-sm font-mono"
-            style="border-radius: 4px;"
+            class="w-full px-1.5 py-1 bg-bg-input border border-border text-text text-sm font-mono rounded"
             aria-label="{label} value"
           />
         </div>
@@ -469,10 +289,10 @@
     <div class="grid grid-cols-8 gap-1">
       {#each DEFAULT_PALETTE as color}
         <button
-          class="w-full aspect-square border {selectedColor === color
+          class="w-full aspect-square border rounded-sm {selectedColor === color
             ? 'border-accent-secondary border-2'
             : 'border-border hover:border-border-bright'}"
-          style="background-color: {color}; border-radius: 2px;"
+          style="background-color: {color};"
           onclick={() => selectPaletteColor(color)}
           aria-label="Select color {color}"
           aria-pressed={selectedColor === color}

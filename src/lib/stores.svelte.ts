@@ -1,3 +1,5 @@
+import { rgbToHex } from "./color";
+
 export type Tool = "pen" | "eraser" | "fill" | "eyedropper";
 
 export interface EditorState {
@@ -41,8 +43,8 @@ interface Snapshot {
   pixels: string[][];
 }
 
-const undoStack: Snapshot[] = [];
-const redoStack: Snapshot[] = [];
+const undoStack = $state<Snapshot[]>([]);
+const redoStack = $state<Snapshot[]>([]);
 const MAX_UNDO = 50;
 
 function clonePixels(pixels: string[][]): string[][] {
@@ -221,30 +223,13 @@ export function loadPixelsFromImageData(
         const alpha = (a / 255).toFixed(2);
         newPixels[y][x] = `rgba(${r},${g},${b},${alpha})`;
       } else {
-        newPixels[y][x] =
-          `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+        newPixels[y][x] = rgbToHex({ r, g, b });
       }
     }
   }
   editorState.gridSize = targetSize;
   editorState.pixels = newPixels;
   bumpRender();
-}
-
-/**
- * Converts a hex color to rgba format with the specified alpha value.
- * Returns the original hex if alpha is 1 or greater (no transparency needed).
- *
- * @param hex - Hex color string (format: #RRGGBB)
- * @param alpha - Alpha value between 0 and 1
- * @returns rgba() string or original hex if alpha >= 1
- */
-export function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  if (alpha >= 1) return hex;
-  return `rgba(${r},${g},${b},${alpha.toFixed(2)})`;
 }
 
 export const DEFAULT_PALETTE = [

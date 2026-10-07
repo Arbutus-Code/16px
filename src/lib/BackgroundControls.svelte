@@ -1,32 +1,15 @@
 <script lang="ts">
-  let {
-    autoCloseOnSelect = false,
-    onClose,
-  }: {
-    autoCloseOnSelect?: boolean;
-    onClose?: () => void;
-  } = $props();
-
   import ColorPicker from "./ColorPicker.svelte";
   import { editorState } from "./stores.svelte";
 
   let isEditing = $state(false);
-
-  function closeEditor() {
-    isEditing = false;
-  }
-
-  function maybeCloseOverlay() {
-    if (autoCloseOnSelect) onClose?.();
-  }
 </script>
 
 <div class="flex flex-col gap-3">
   <span class="text-xs text-text-dim uppercase tracking-wider">Background</span>
 
   <button
-    class="w-full flex items-center gap-3 px-3 py-2 border border-border text-left hover:border-border-bright"
-    style="border-radius: 4px;"
+    class="w-full flex items-center gap-3 px-3 py-2 border border-border text-left hover:border-border-bright rounded"
     onclick={() => (isEditing = !isEditing)}
     aria-expanded={isEditing}
     aria-label="Edit background color"
@@ -49,16 +32,14 @@
 
   <div class="flex justify-end">
     <button
-      class="text-sm text-text-dim border border-border px-3 py-1.5 hover:border-border-bright hover:text-text {editorState.bgColor ===
+      class="text-sm text-text-dim border border-border px-3 py-1.5 hover:border-border-bright hover:text-text rounded {editorState.bgColor ===
       'transparent'
         ? 'border-accent-secondary text-accent-secondary'
         : ''}"
-      style="border-radius: 4px;"
       onclick={() => {
         editorState.bgColor =
           editorState.bgColor === "transparent" ? "#0a0a0f" : "transparent";
-        closeEditor();
-        maybeCloseOverlay();
+        isEditing = false;
       }}
     >
       {editorState.bgColor === "transparent" ? "Transparent" : "Clear"}
@@ -66,30 +47,16 @@
   </div>
 
   {#if isEditing}
-    <div
-      class="mt-2 p-3 border border-border-bright"
-      style="border-radius: 4px;"
-    >
+    <div class="mt-2 p-3 border border-border-bright rounded">
       <div class="flex justify-end mb-2">
         <button
-          class="px-3 py-1 text-xs uppercase tracking-wider border border-border text-text-dim hover:border-border-bright hover:text-text"
-          style="border-radius: 4px;"
-          onclick={() => {
-            closeEditor();
-            maybeCloseOverlay();
-          }}
+          class="px-3 py-1 text-xs uppercase tracking-wider border border-border text-text-dim hover:border-border-bright hover:text-text rounded"
+          onclick={() => (isEditing = false)}
         >
           Close
         </button>
       </div>
-      <ColorPicker
-        target="background"
-        onClose={() => {
-          closeEditor();
-          maybeCloseOverlay();
-        }}
-        autoCloseOnSelect={false}
-      />
+      <ColorPicker target="background" />
     </div>
   {/if}
 </div>
