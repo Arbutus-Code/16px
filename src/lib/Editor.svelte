@@ -69,6 +69,7 @@
 
     <section
       id="main-canvas"
+      tabindex="-1"
       aria-label="Canvas workspace"
       class="flex-1 flex flex-col items-center p-4 sm:p-8 lg:p-10 order-1 lg:order-2 bg-bg min-w-0 lg:overflow-y-auto lg:h-full"
       style="min-height: 540px;"
@@ -104,8 +105,7 @@
       >
         <h2 class="text-sm uppercase tracking-wider text-text-dim">Colour</h2>
         <button
-          class="px-3 py-1.5 text-xs uppercase tracking-wider border border-border text-text-dim hover:border-border-bright hover:text-text"
-          style="border-radius: 4px;"
+          class="px-3 py-1.5 text-xs uppercase tracking-wider border border-border text-text-dim hover:border-border-bright hover:text-text rounded"
           onclick={closeMobileColorOverlay}
           aria-label="Close colour controls"
         >
