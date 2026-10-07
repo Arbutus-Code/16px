@@ -1,10 +1,4 @@
 <script lang="ts">
-  let {
-    onOpenColorOverlay,
-  }: {
-    onOpenColorOverlay?: () => void;
-  } = $props();
-
   import {
     editorState,
     clearCanvas,
@@ -12,8 +6,16 @@
     undo,
     redo,
     pushUndo,
+    canUndo,
+    canRedo,
   } from "./stores.svelte";
   import type { Tool } from "./stores.svelte";
+
+  let {
+    onOpenColorOverlay,
+  }: {
+    onOpenColorOverlay?: () => void;
+  } = $props();
 
   const tools: { id: Tool; label: string; icon: string }[] = [
     {
@@ -61,11 +63,10 @@
     >
       {#each tools as tool}
         <button
-          class="flex flex-col items-center gap-2 px-3 py-3 border text-xs {editorState.tool ===
+          class="flex flex-col items-center gap-2 px-3 py-3 border text-xs rounded {editorState.tool ===
           tool.id
             ? 'border-accent bg-accent/20 text-accent'
             : 'border-border text-text-dim hover:border-border-bright hover:text-text'}"
-          style="border-radius: 4px;"
           onclick={() => (editorState.tool = tool.id)}
           aria-label="{tool.label} tool"
           aria-pressed={editorState.tool === tool.id}
@@ -88,15 +89,14 @@
       {/each}
 
       <button
-        class="lg:hidden flex flex-col items-center gap-2 px-3 py-3 border text-xs border-border text-text-dim hover:border-border-bright hover:text-text"
-        style="border-radius: 4px;"
+        class="lg:hidden flex flex-col items-center gap-2 px-3 py-3 border text-xs rounded border-border text-text-dim hover:border-border-bright hover:text-text"
         onclick={onOpenColorOverlay}
         aria-label="Open colour controls"
         title="Colour"
       >
         <span
-          class="w-[18px] h-[18px] border border-border-bright"
-          style="background-color: {editorState.currentColor}; border-radius: 3px;"
+          class="w-[18px] h-[18px] border border-border-bright rounded-sm"
+          style="background-color: {editorState.currentColor};"
         ></span>
         <span class="text-xs uppercase tracking-wider">Colour</span>
       </button>
@@ -115,11 +115,10 @@
     >
       {#each sizes as size}
         <button
-          class="px-3 py-2 text-xs border font-mono {editorState.gridSize ===
+          class="px-3 py-2 text-xs border font-mono rounded {editorState.gridSize ===
           size
             ? 'border-accent-secondary bg-accent-secondary/20 text-accent-secondary'
             : 'border-border text-text-dim hover:border-border-bright'}"
-          style="border-radius: 4px;"
           onclick={() => setGridSize(size)}
           aria-pressed={editorState.gridSize === size}
           aria-label="{size} by {size} pixels"
@@ -141,18 +140,18 @@
       aria-labelledby="history-label"
     >
       <button
-        class="px-3 py-2 text-xs border border-border text-text-dim hover:border-border-bright hover:text-text"
-        style="border-radius: 4px;"
+        class="px-3 py-2 text-xs border border-border text-text-dim hover:border-border-bright hover:text-text rounded disabled:opacity-40 disabled:pointer-events-none"
         onclick={undo}
+        disabled={!canUndo()}
         aria-label="Undo"
         title="Undo (Cmd+Z)"
       >
         Undo
       </button>
       <button
-        class="px-3 py-2 text-xs border border-border text-text-dim hover:border-border-bright hover:text-text"
-        style="border-radius: 4px;"
+        class="px-3 py-2 text-xs border border-border text-text-dim hover:border-border-bright hover:text-text rounded disabled:opacity-40 disabled:pointer-events-none"
         onclick={redo}
+        disabled={!canRedo()}
         aria-label="Redo"
         title="Redo (Cmd+Shift+Z)"
       >
@@ -165,9 +164,7 @@
     <label class="flex items-center gap-2 text-xs text-text-dim cursor-pointer">
       <input
         type="checkbox"
-        checked={editorState.showGrid}
-        onchange={(e) =>
-          (editorState.showGrid = (e.target as HTMLInputElement).checked)}
+        bind:checked={editorState.showGrid}
         class="accent-accent"
       />
       Show Grid
@@ -175,8 +172,7 @@
   </div>
 
   <button
-    class="w-full px-3 py-2.5 text-xs uppercase tracking-wider border border-accent/50 text-accent hover:bg-accent/10"
-    style="border-radius: 4px;"
+    class="w-full px-3 py-2.5 text-xs uppercase tracking-wider border border-accent/50 text-accent hover:bg-accent/10 rounded"
     onclick={handleClear}
   >
     Clear Canvas
