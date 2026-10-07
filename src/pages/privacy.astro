@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import PageFooter from "../components/PageFooter.astro";
+import "../styles/legal.css";
 ---
 
 <Layout
@@ -15,9 +16,7 @@ import PageFooter from "../components/PageFooter.astro";
     <main class="flex-1 max-w-3xl mx-auto px-6 py-12 sm:py-16 w-full">
       <article class="legal-content">
         <header class="mb-12">
-          <h1
-            class="text-3xl sm:text-4xl font-bold text-text-bright tracking-tight"
-          >
+          <h1 class="text-3xl sm:text-4xl font-bold text-text-bright tracking-tight">
             Privacy Policy
           </h1>
           <p class="mt-3 text-text-dim text-sm">Last updated: February 2026</p>
@@ -40,9 +39,12 @@ import PageFooter from "../components/PageFooter.astro";
             <a
               href="https://arbutuscode.ca"
               target="_blank"
-              rel="noopener noreferrer">Arbutus Code</a
-            > in British Columbia, Canada. This policy covers how we handle information
-            on our website, 16px.arbutuscode.ca.
+              rel="noopener noreferrer"
+            >
+              Arbutus Code
+            </a>{" "}
+            in British Columbia, Canada. This policy covers how we handle
+            information on our website, 16px.arbutuscode.ca.
           </p>
           <p>
             For questions about this policy, contact us at
@@ -55,14 +57,20 @@ import PageFooter from "../components/PageFooter.astro";
 
           <h3>Analytics Data</h3>
           <p>
-            We use <a
+            We use{" "}
+            <a
               href="https://umami.is"
               target="_blank"
-              rel="noopener noreferrer">Umami</a
-            >, a privacy-focused, self-hosted analytics platform. Umami is
+              rel="noopener noreferrer"
+            >
+              Umami
+            </a>
+            , a privacy-focused, self-hosted analytics platform. Umami is
             designed to be GDPR and PIPEDA compliant by default.
           </p>
-          <p><strong>What Umami collects:</strong></p>
+          <p>
+            <strong>What Umami collects:</strong>
+          </p>
           <ul>
             <li>Page views and referrer URLs</li>
             <li>Browser type and operating system</li>
@@ -70,7 +78,9 @@ import PageFooter from "../components/PageFooter.astro";
             <li>Country (derived from anonymized IP)</li>
             <li>Session duration and bounce rate</li>
           </ul>
-          <p><strong>What Umami does NOT collect:</strong></p>
+          <p>
+            <strong>What Umami does NOT collect:</strong>
+          </p>
           <ul>
             <li>Personal information or identifiers</li>
             <li>IP addresses (they're anonymized and not stored)</li>
@@ -91,8 +101,8 @@ import PageFooter from "../components/PageFooter.astro";
           <h3>Browser-Based Editor</h3>
           <p>
             The 16px pixel art editor runs entirely in your browser.
-            <strong>Your artwork is never uploaded to our servers.</strong> All drawing,
-            editing, import, and export happens locally on your device.
+            <strong>Your artwork is never uploaded to our servers.</strong> All
+            drawing, editing, import, and export happens locally on your device.
           </p>
         </section>
 
@@ -100,12 +110,12 @@ import PageFooter from "../components/PageFooter.astro";
           <h2>How We Use Information</h2>
           <ul>
             <li>
-              <strong>Analytics:</strong> To understand site usage and improve the
-              user experience
+              <strong>Analytics:</strong> To understand site usage and improve
+              the user experience
             </li>
             <li>
-              <strong>Communications:</strong> To respond to inquiries if you contact
-              us
+              <strong>Communications:</strong> To respond to inquiries if you
+              contact us
             </li>
           </ul>
         </section>
@@ -127,12 +137,7 @@ import PageFooter from "../components/PageFooter.astro";
               site.
             </p>
             <div class="toggle-controls">
-              <button
-                type="button"
-                id="analytics-toggle"
-                class="toggle-btn"
-                data-enabled="true"
-              >
+              <button type="button" id="analytics-toggle" class="toggle-btn">
                 Loading...
               </button>
               <span id="analytics-status" class="toggle-status"></span>
@@ -150,12 +155,12 @@ import PageFooter from "../components/PageFooter.astro";
           <h2>Data Retention</h2>
           <ul>
             <li>
-              <strong>Analytics:</strong> Aggregated, anonymized data is retained
-              indefinitely for trend analysis
+              <strong>Analytics:</strong> Aggregated, anonymized data is
+              retained indefinitely for trend analysis
             </li>
             <li>
-              <strong>Communications:</strong> Retained for business records and to
-              provide ongoing support
+              <strong>Communications:</strong> Retained for business records and
+              to provide ongoing support
             </li>
           </ul>
         </section>
@@ -226,66 +231,6 @@ import PageFooter from "../components/PageFooter.astro";
   </div>
 
   <style>
-    .legal-content section {
-      margin-bottom: 2rem;
-    }
-
-    .legal-content h2 {
-      font-size: 1.375rem;
-      font-weight: 700;
-      color: var(--color-text-bright);
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.01em;
-    }
-
-    .legal-content h3 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--color-text);
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .legal-content h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-text-bright);
-      margin-bottom: 0.75rem;
-    }
-
-    .legal-content p {
-      color: var(--color-text-dim);
-      line-height: 1.75;
-      margin-bottom: 0.75rem;
-    }
-
-    .legal-content a {
-      color: var(--color-accent);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-      transition: color 0.15s;
-    }
-
-    .legal-content a:hover {
-      color: var(--color-accent-hover);
-    }
-
-    .legal-content ul {
-      list-style: disc;
-      padding-left: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .legal-content li {
-      color: var(--color-text-dim);
-      line-height: 1.75;
-      margin-bottom: 0.25rem;
-    }
-
-    .legal-content strong {
-      color: var(--color-text);
-    }
-
     .analytics-toggle-card {
       border: 1px solid var(--color-border);
       background: var(--color-bg-raised);
@@ -335,60 +280,29 @@ import PageFooter from "../components/PageFooter.astro";
   </style>
 
   <script>
-    function initAnalyticsToggle() {
-      const toggle = document.getElementById(
-        "analytics-toggle",
-      ) as HTMLButtonElement;
-      const status = document.getElementById("analytics-status") as HTMLElement;
+    import { getAnalyticsConsent, setAnalyticsConsent } from "../lib/consent";
 
-      if (!toggle || !status) return;
+    const toggle = document.getElementById(
+      "analytics-toggle",
+    ) as HTMLButtonElement | null;
+    const status = document.getElementById("analytics-status");
 
-      const STORAGE_KEY = "analytics-consent";
-      const UMAMI_DISABLED_KEY = "umami.disabled";
-
-      function getConsent(): boolean {
-        const umamiDisabled = localStorage.getItem(UMAMI_DISABLED_KEY);
-        if (umamiDisabled === "1") return false;
-
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored === null ? true : stored === "true";
-      }
-
-      function setConsent(enabled: boolean) {
-        localStorage.setItem(STORAGE_KEY, String(enabled));
-
-        if (!enabled) {
-          localStorage.setItem(UMAMI_DISABLED_KEY, "1");
-        } else {
-          localStorage.removeItem(UMAMI_DISABLED_KEY);
-        }
-
-        updateUI(enabled);
-
-        window.dispatchEvent(
-          new CustomEvent("analytics-consent-change", {
-            detail: { enabled },
-          }),
-        );
-      }
-
-      function updateUI(enabled: boolean) {
+    if (toggle && status) {
+      const updateUI = (enabled: boolean) => {
         toggle.textContent = enabled ? "Opt Out" : "Opt In";
-        toggle.dataset.enabled = String(enabled);
         status.textContent = enabled
           ? "Analytics are currently enabled"
           : "Analytics are currently disabled";
-      }
+      };
 
-      const currentConsent = getConsent();
-      updateUI(currentConsent);
+      let enabled = getAnalyticsConsent();
+      updateUI(enabled);
 
       toggle.addEventListener("click", () => {
-        const currentlyEnabled = toggle.dataset.enabled === "true";
-        setConsent(!currentlyEnabled);
+        enabled = !enabled;
+        setAnalyticsConsent(enabled);
+        updateUI(enabled);
       });
     }
-
-    initAnalyticsToggle();
   </script>
 </Layout>

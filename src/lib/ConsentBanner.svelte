@@ -1,52 +1,28 @@
 <script lang="ts">
-  const STORAGE_KEY = "analytics-consent";
-  const BANNER_SHOWN_KEY = "consent-banner-shown";
-  const UMAMI_DISABLED_KEY = "umami.disabled";
+  import {
+    shouldShowConsentBanner,
+    markConsentBannerShown,
+    setAnalyticsConsent,
+  } from "./consent";
 
   let visible = $state(false);
   let animateIn = $state(false);
 
-  function checkShouldShow() {
-    const hasConsent = localStorage.getItem(STORAGE_KEY);
-    const bannerShown = localStorage.getItem(BANNER_SHOWN_KEY);
-
-    if (hasConsent === null && bannerShown !== "true") {
-      setTimeout(() => {
-        visible = true;
-        requestAnimationFrame(() => {
-          animateIn = true;
-        });
-      }, 1500);
-    }
-  }
-
-  function hideBanner() {
+  function respond(accepted: boolean) {
+    markConsentBannerShown();
+    setAnalyticsConsent(accepted);
     animateIn = false;
-    setTimeout(() => {
-      visible = false;
-    }, 300);
-  }
-
-  function setConsent(enabled: boolean) {
-    localStorage.setItem(STORAGE_KEY, String(enabled));
-    localStorage.setItem(BANNER_SHOWN_KEY, "true");
-    hideBanner();
-
-    window.dispatchEvent(
-      new CustomEvent("analytics-consent-change", {
-        detail: { enabled },
-      }),
-    );
-
-    if (!enabled) {
-      localStorage.setItem(UMAMI_DISABLED_KEY, "1");
-    } else {
-      localStorage.removeItem(UMAMI_DISABLED_KEY);
-    }
+    setTimeout(() => (visible = false), 300);
   }
 
   $effect(() => {
-    checkShouldShow();
+    if (!shouldShowConsentBanner()) return;
+    // Delay so the banner doesn't compete with first paint.
+    const show = setTimeout(() => {
+      visible = true;
+      requestAnimationFrame(() => (animateIn = true));
+    }, 1500);
+    return () => clearTimeout(show);
   });
 </script>
 
@@ -67,14 +43,14 @@
         <button
           type="button"
           class="consent-btn consent-btn--decline"
-          onclick={() => setConsent(false)}
+          onclick={() => respond(false)}
         >
           Decline
         </button>
         <button
           type="button"
           class="consent-btn consent-btn--accept"
-          onclick={() => setConsent(true)}
+          onclick={() => respond(true)}
         >
           Accept
         </button>

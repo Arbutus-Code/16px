@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import PageFooter from "../components/PageFooter.astro";
+import "../styles/legal.css";
 ---
 
 <Layout
@@ -15,9 +16,7 @@ import PageFooter from "../components/PageFooter.astro";
     <main class="flex-1 max-w-3xl mx-auto px-6 py-12 sm:py-16 w-full">
       <article class="legal-content">
         <header class="mb-12">
-          <h1
-            class="text-3xl sm:text-4xl font-bold text-text-bright tracking-tight"
-          >
+          <h1 class="text-3xl sm:text-4xl font-bold text-text-bright tracking-tight">
             Terms of Use
           </h1>
           <p class="mt-3 text-text-dim text-sm">Last updated: February 2026</p>
@@ -35,8 +34,11 @@ import PageFooter from "../components/PageFooter.astro";
             <a
               href="https://arbutuscode.ca"
               target="_blank"
-              rel="noopener noreferrer">Arbutus Code</a
-            > in British Columbia, Canada.
+              rel="noopener noreferrer"
+            >
+              Arbutus Code
+            </a>{" "}
+            in British Columbia, Canada.
           </p>
         </section>
 
@@ -54,8 +56,8 @@ import PageFooter from "../components/PageFooter.astro";
           <p>The 16px editor:</p>
           <ul>
             <li>
-              <strong>Processes everything locally</strong> — your artwork never leaves
-              your browser or gets uploaded to any server
+              <strong>Processes everything locally</strong> — your artwork never
+              leaves your browser or gets uploaded to any server
             </li>
             <li>Is provided "as is" without warranty</li>
             <li>May be modified, updated, or removed at any time</li>
@@ -152,59 +154,4 @@ import PageFooter from "../components/PageFooter.astro";
 
     <PageFooter />
   </div>
-
-  <style>
-    .legal-content section {
-      margin-bottom: 2rem;
-    }
-
-    .legal-content h2 {
-      font-size: 1.375rem;
-      font-weight: 700;
-      color: var(--color-text-bright);
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.01em;
-    }
-
-    .legal-content h3 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--color-text);
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .legal-content p {
-      color: var(--color-text-dim);
-      line-height: 1.75;
-      margin-bottom: 0.75rem;
-    }
-
-    .legal-content a {
-      color: var(--color-accent);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-      transition: color 0.15s;
-    }
-
-    .legal-content a:hover {
-      color: var(--color-accent-hover);
-    }
-
-    .legal-content ul {
-      list-style: disc;
-      padding-left: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .legal-content li {
-      color: var(--color-text-dim);
-      line-height: 1.75;
-      margin-bottom: 0.25rem;
-    }
-
-    .legal-content strong {
-      color: var(--color-text);
-    }
-  </style>
 </Layout>
