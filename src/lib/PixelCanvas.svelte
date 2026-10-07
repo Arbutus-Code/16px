@@ -6,25 +6,28 @@
     setPixelSilent,
     getPixel,
     floodFill,
-    hexToRgba,
     pushUndo,
     undo,
     redo,
   } from "./stores.svelte";
+  import { hexToRgba, pixelToHexAlpha } from "./color";
+  import { paintPixels } from "./render";
+
+  interface Cell {
+    x: number;
+    y: number;
+  }
 
   let canvasEl: HTMLCanvasElement;
-  let wrapperEl: HTMLDivElement;
   let isDrawing = false;
-  let lastCell: { x: number; y: number } | null = null;
+  let lastCell: Cell | null = null;
 
   const CANVAS_RENDER_SIZE = 512;
 
-  function getCellFromEvent(e: MouseEvent): { x: number; y: number } | null {
+  function getCellFromEvent(e: PointerEvent): Cell | null {
     const rect = canvasEl.getBoundingClientRect();
-    const scaleX = canvasEl.width / rect.width;
-    const scaleY = canvasEl.height / rect.height;
-    const px = (e.clientX - rect.left) * scaleX;
-    const py = (e.clientY - rect.top) * scaleY;
+    const px = ((e.clientX - rect.left) / rect.width) * canvasEl.width;
+    const py = ((e.clientY - rect.top) / rect.height) * canvasEl.height;
     const cellSize = canvasEl.width / editorState.gridSize;
     const x = Math.floor(px / cellSize);
     const y = Math.floor(py / cellSize);
@@ -51,27 +54,41 @@
     } else if (tool === "fill") {
       floodFill(x, y, getActiveColor());
     } else if (tool === "eyedropper") {
-      const color = getPixel(x, y);
-      if (color !== "transparent") {
-        if (color.startsWith("rgba")) {
-          const match = color.match(/rgba\((\d+),(\d+),(\d+),([\d.]+)\)/);
-          if (match) {
-            const r = parseInt(match[1]);
-            const g = parseInt(match[2]);
-            const b = parseInt(match[3]);
-            editorState.currentColor = `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-            editorState.currentAlpha = parseFloat(match[4]);
-          }
-        } else {
-          editorState.currentColor = color;
-          editorState.currentAlpha = 1;
-        }
+      const picked = pixelToHexAlpha(getPixel(x, y));
+      if (picked) {
+        editorState.currentColor = picked.hex;
+        editorState.currentAlpha = picked.alpha;
       }
       editorState.tool = "pen";
     }
   }
 
-  function onMouseDown(e: MouseEvent) {
+  /** Bresenham line so fast pointer strokes stay continuous. */
+  function drawLine(from: Cell, to: Cell, color: string) {
+    const dx = Math.abs(to.x - from.x);
+    const dy = Math.abs(to.y - from.y);
+    const sx = from.x < to.x ? 1 : -1;
+    const sy = from.y < to.y ? 1 : -1;
+    let err = dx - dy;
+    let cx = from.x;
+    let cy = from.y;
+    while (true) {
+      setPixelSilent(cx, cy, color);
+      if (cx === to.x && cy === to.y) break;
+      const e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        cx += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        cy += sy;
+      }
+    }
+    renderTick.value++;
+  }
+
+  function onPointerDown(e: PointerEvent) {
     e.preventDefault();
     const cell = getCellFromEvent(e);
     if (!cell) return;
@@ -81,117 +98,21 @@
     applyTool(cell.x, cell.y);
   }
 
-  function onMouseMove(e: MouseEvent) {
+  function onPointerMove(e: PointerEvent) {
     if (!isDrawing) return;
     const cell = getCellFromEvent(e);
-    if (!cell) return;
-    if (lastCell && cell.x === lastCell.x && cell.y === lastCell.y) return;
-
+    if (!cell || (lastCell && cell.x === lastCell.x && cell.y === lastCell.y))
+      return;
     if (
       lastCell &&
       (editorState.tool === "pen" || editorState.tool === "eraser")
     ) {
-      const dx = Math.abs(cell.x - lastCell.x);
-      const dy = Math.abs(cell.y - lastCell.y);
-      const sx = lastCell.x < cell.x ? 1 : -1;
-      const sy = lastCell.y < cell.y ? 1 : -1;
-      let err = dx - dy;
-      let cx = lastCell.x;
-      let cy = lastCell.y;
-      const color = getActiveColor();
-      while (true) {
-        setPixelSilent(cx, cy, color);
-        if (cx === cell.x && cy === cell.y) break;
-        const e2 = 2 * err;
-        if (e2 > -dy) {
-          err -= dy;
-          cx += sx;
-        }
-        if (e2 < dx) {
-          err += dx;
-          cy += sy;
-        }
-      }
-      setPixel(cell.x, cell.y, color);
+      drawLine(lastCell, cell, getActiveColor());
     }
     lastCell = cell;
   }
 
-  function onMouseUp() {
-    isDrawing = false;
-    lastCell = null;
-  }
-
-  function getTouchCell(e: TouchEvent): { x: number; y: number } | null {
-    const touch = e.touches[0] || e.changedTouches[0];
-    if (!touch || !canvasEl) return null;
-    const rect = canvasEl.getBoundingClientRect();
-    const scaleX = canvasEl.width / rect.width;
-    const scaleY = canvasEl.height / rect.height;
-    const px = (touch.clientX - rect.left) * scaleX;
-    const py = (touch.clientY - rect.top) * scaleY;
-    const cellSize = canvasEl.width / editorState.gridSize;
-    const x = Math.floor(px / cellSize);
-    const y = Math.floor(py / cellSize);
-    if (
-      x >= 0 &&
-      x < editorState.gridSize &&
-      y >= 0 &&
-      y < editorState.gridSize
-    ) {
-      return { x, y };
-    }
-    return null;
-  }
-
-  function onTouchStart(e: TouchEvent) {
-    e.preventDefault();
-    const cell = getTouchCell(e);
-    if (!cell) return;
-    pushUndo();
-    isDrawing = true;
-    lastCell = cell;
-    applyTool(cell.x, cell.y);
-  }
-
-  function onTouchMove(e: TouchEvent) {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const cell = getTouchCell(e);
-    if (!cell) return;
-    if (lastCell && cell.x === lastCell.x && cell.y === lastCell.y) return;
-
-    if (
-      lastCell &&
-      (editorState.tool === "pen" || editorState.tool === "eraser")
-    ) {
-      const dx = Math.abs(cell.x - lastCell.x);
-      const dy = Math.abs(cell.y - lastCell.y);
-      const sx = lastCell.x < cell.x ? 1 : -1;
-      const sy = lastCell.y < cell.y ? 1 : -1;
-      let err = dx - dy;
-      let cx = lastCell.x;
-      let cy = lastCell.y;
-      const color = getActiveColor();
-      while (true) {
-        setPixelSilent(cx, cy, color);
-        if (cx === cell.x && cy === cell.y) break;
-        const e2 = 2 * err;
-        if (e2 > -dy) {
-          err -= dy;
-          cx += sx;
-        }
-        if (e2 < dx) {
-          err += dx;
-          cy += sy;
-        }
-      }
-      setPixel(cell.x, cell.y, color);
-    }
-    lastCell = cell;
-  }
-
-  function onTouchEnd() {
+  function onPointerUp() {
     isDrawing = false;
     lastCell = null;
   }
@@ -247,29 +168,13 @@
     if (!ctx) return;
 
     const size = editorState.gridSize;
-    const totalPx = CANVAS_RENDER_SIZE;
-    canvasEl.width = totalPx;
-    canvasEl.height = totalPx;
-    const cellSize = totalPx / size;
+    canvasEl.width = CANVAS_RENDER_SIZE;
+    canvasEl.height = CANVAS_RENDER_SIZE;
+    const cellSize = CANVAS_RENDER_SIZE / size;
 
-    ctx.clearRect(0, 0, totalPx, totalPx);
-
+    ctx.clearRect(0, 0, CANVAS_RENDER_SIZE, CANVAS_RENDER_SIZE);
     drawCheckerboard(ctx, size, cellSize);
-
-    if (editorState.bgColor && editorState.bgColor !== "transparent") {
-      ctx.fillStyle = editorState.bgColor;
-      ctx.fillRect(0, 0, totalPx, totalPx);
-    }
-
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const color = editorState.pixels[y][x];
-        if (color !== "transparent") {
-          ctx.fillStyle = color;
-          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        }
-      }
-    }
+    paintPixels(ctx, editorState.pixels, cellSize, editorState.bgColor);
 
     if (editorState.showGrid && cellSize >= 4) {
       ctx.strokeStyle = "rgba(255,255,255,0.08)";
@@ -278,11 +183,11 @@
         const pos = Math.round(i * cellSize) + 0.5;
         ctx.beginPath();
         ctx.moveTo(pos, 0);
-        ctx.lineTo(pos, totalPx);
+        ctx.lineTo(pos, CANVAS_RENDER_SIZE);
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(0, pos);
-        ctx.lineTo(totalPx, pos);
+        ctx.lineTo(CANVAS_RENDER_SIZE, pos);
         ctx.stroke();
       }
     }
@@ -298,21 +203,16 @@
 </script>
 
 <svelte:window
-  onmouseup={onMouseUp}
-  onmousemove={onMouseMove}
+  onpointermove={onPointerMove}
+  onpointerup={onPointerUp}
+  onpointercancel={onPointerUp}
   onkeydown={onKeyDown}
 />
 
-<div class="flex items-center justify-center" bind:this={wrapperEl}>
-  <canvas
-    bind:this={canvasEl}
-    class="border border-border cursor-crosshair select-none max-w-full touch-none"
-    style="width: min(100%, 512px); height: auto; aspect-ratio: 1 / 1; image-rendering: pixelated;"
-    onmousedown={onMouseDown}
-    ontouchstart={onTouchStart}
-    ontouchmove={onTouchMove}
-    ontouchend={onTouchEnd}
-    tabindex="0"
-    aria-label="Pixel art canvas - {editorState.gridSize}x{editorState.gridSize} grid"
-  ></canvas>
-</div>
+<canvas
+  bind:this={canvasEl}
+  class="border border-border cursor-crosshair select-none w-full max-w-[512px] h-auto aspect-square touch-none image-render-pixelated"
+  onpointerdown={onPointerDown}
+  tabindex="0"
+  aria-label="Pixel art canvas - {editorState.gridSize}x{editorState.gridSize} grid"
+></canvas>
