@@ -4,23 +4,36 @@
     loadPixelsFromImageData,
     pushUndo,
   } from "./stores.svelte";
+  import { paintPixels } from "./render";
+
+  type ExportFormat = "png" | "svg" | "jpg" | "webp" | "gif";
 
   let fileInput: HTMLInputElement;
   let showExportDialog = $state(false);
-  let exportFormat = $state<"png" | "jpg" | "svg" | "gif" | "webp">("png");
+  let exportFormat = $state<ExportFormat>("png");
   let exportScale = $state(8);
   let exportBgColor = $state("#000000");
   let exportTransparent = $state(true);
 
   const ACCEPT_FORMATS = ".png,.jpg,.jpeg,.gif,.svg,.heic,.heif,.avif,.webp";
-
-  function handleImport() {
-    fileInput.click();
-  }
+  const EXPORT_FORMATS: ExportFormat[] = ["png", "svg", "jpg", "webp", "gif"];
+  const MIME_TYPES: Partial<Record<ExportFormat, string>> = {
+    png: "image/png",
+    jpg: "image/jpeg",
+    webp: "image/webp",
+    gif: "image/gif",
+  };
+  // jpg has no alpha channel; everything else can carry transparency.
+  const TRANSPARENT_FORMATS = new Set<ExportFormat>([
+    "png",
+    "svg",
+    "webp",
+    "gif",
+  ]);
 
   async function onFileSelected(e: Event) {
-    const target = e.target as HTMLInputElement;
-    const file = target.files?.[0];
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
     const img = new Image();
@@ -35,8 +48,7 @@
       const ctx = canvas.getContext("2d")!;
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(img, 0, 0, size, size);
-      const imageData = ctx.getImageData(0, 0, size, size);
-      loadPixelsFromImageData(imageData, size);
+      loadPixelsFromImageData(ctx.getImageData(0, 0, size, size), size);
       URL.revokeObjectURL(url);
     };
 
@@ -48,33 +60,7 @@
     };
 
     img.src = url;
-    target.value = "";
-  }
-
-  function getExportCanvas(): HTMLCanvasElement {
-    const size = editorState.gridSize;
-    const pixelSize = exportScale;
-    const canvas = document.createElement("canvas");
-    canvas.width = size * pixelSize;
-    canvas.height = size * pixelSize;
-    const ctx = canvas.getContext("2d")!;
-
-    if (!exportTransparent) {
-      ctx.fillStyle = exportBgColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const color = editorState.pixels[y][x];
-        if (color !== "transparent") {
-          ctx.fillStyle = color;
-          ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-        }
-      }
-    }
-
-    return canvas;
+    input.value = "";
   }
 
   function generateSVG(): string {
@@ -85,17 +71,12 @@
         const color = editorState.pixels[y][x];
         if (color !== "transparent") {
           rects += `  <rect x="${x}" y="${y}" width="1" height="1" fill="${color}" />\n`;
-        } else if (!exportTransparent) {
-          rects += `  <rect x="${x}" y="${y}" width="1" height="1" fill="${exportBgColor}" />\n`;
         }
       }
     }
-
-    let bgRect = "";
-    if (!exportTransparent) {
-      bgRect = `  <rect width="${size}" height="${size}" fill="${exportBgColor}" />\n`;
-    }
-
+    const bgRect = exportTransparent
+      ? ""
+      : `  <rect width="${size}" height="${size}" fill="${exportBgColor}" />\n`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">\n${bgRect}${rects}</svg>`;
   }
 
@@ -104,54 +85,32 @@
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
-    document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 
-  async function handleExport() {
-    const timestamp = Date.now();
-    const baseName = `16px-${editorState.gridSize}x${editorState.gridSize}-${timestamp}`;
+  function handleExport() {
+    const baseName = `16px-${editorState.gridSize}x${editorState.gridSize}-${Date.now()}`;
 
     if (exportFormat === "svg") {
-      const svgString = generateSVG();
-      const blob = new Blob([svgString], { type: "image/svg+xml" });
-      download(blob, `${baseName}.svg`);
+      download(
+        new Blob([generateSVG()], { type: "image/svg+xml" }),
+        `${baseName}.svg`,
+      );
     } else {
-      const canvas = getExportCanvas();
-      let mimeType: string;
-      let ext: string;
-
-      switch (exportFormat) {
-        case "png":
-          mimeType = "image/png";
-          ext = "png";
-          break;
-        case "jpg":
-          mimeType = "image/jpeg";
-          ext = "jpg";
-          break;
-        case "gif":
-          mimeType = "image/gif";
-          ext = "gif";
-          break;
-        case "webp":
-          mimeType = "image/webp";
-          ext = "webp";
-          break;
-        default:
-          mimeType = "image/png";
-          ext = "png";
-      }
-
+      const size = editorState.gridSize;
+      const canvas = document.createElement("canvas");
+      canvas.width = size * exportScale;
+      canvas.height = size * exportScale;
+      paintPixels(
+        canvas.getContext("2d")!,
+        editorState.pixels,
+        exportScale,
+        exportTransparent ? undefined : exportBgColor,
+      );
       canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            download(blob, `${baseName}.${ext}`);
-          }
-        },
-        mimeType,
+        (blob) => blob && download(blob, `${baseName}.${exportFormat}`),
+        MIME_TYPES[exportFormat],
         0.95,
       );
     }
@@ -159,12 +118,8 @@
     showExportDialog = false;
   }
 
-  function formatSupportsTransparency(fmt: string): boolean {
-    return fmt === "png" || fmt === "svg" || fmt === "webp" || fmt === "gif";
-  }
-
   $effect(() => {
-    if (!formatSupportsTransparency(exportFormat)) {
+    if (!TRANSPARENT_FORMATS.has(exportFormat)) {
       exportTransparent = false;
     }
   });
@@ -181,16 +136,14 @@
   />
 
   <button
-    class="w-full px-3 py-2 text-xs uppercase tracking-wider border border-accent-secondary/50 text-accent-secondary hover:bg-accent-secondary/10"
-    style="border-radius: 4px;"
-    onclick={handleImport}
+    class="w-full px-3 py-2 text-xs uppercase tracking-wider border border-accent-secondary/50 text-accent-secondary hover:bg-accent-secondary/10 rounded"
+    onclick={() => fileInput.click()}
   >
     Import Image
   </button>
 
   <button
-    class="w-full px-3 py-2 text-xs uppercase tracking-wider border border-success/50 text-success hover:bg-success/10"
-    style="border-radius: 4px;"
+    class="w-full px-3 py-2 text-xs uppercase tracking-wider border border-success/50 text-success hover:bg-success/10 rounded"
     onclick={() => (showExportDialog = !showExportDialog)}
     aria-expanded={showExportDialog}
   >
@@ -199,8 +152,7 @@
 
   {#if showExportDialog}
     <div
-      class="border border-border-bright bg-bg-panel p-3 flex flex-col gap-3"
-      style="border-radius: 4px;"
+      class="border border-border-bright bg-bg-panel p-3 flex flex-col gap-3 rounded"
       role="region"
       aria-label="Export settings"
     >
@@ -211,14 +163,13 @@
       <div>
         <span class="text-xs text-text-dim uppercase block mb-1">Format</span>
         <div class="grid grid-cols-5 gap-1">
-          {#each ["png", "svg", "jpg", "webp", "gif"] as fmt}
+          {#each EXPORT_FORMATS as fmt}
             <button
-              class="px-1 py-1 text-xs uppercase border font-mono {exportFormat ===
+              class="px-1 py-1 text-xs uppercase border font-mono rounded {exportFormat ===
               fmt
                 ? 'border-success bg-success/20 text-success'
                 : 'border-border text-text-dim hover:border-border-bright'}"
-              style="border-radius: 4px;"
-              onclick={() => (exportFormat = fmt as typeof exportFormat)}
+              onclick={() => (exportFormat = fmt)}
               aria-pressed={exportFormat === fmt}
             >
               {fmt}
@@ -246,7 +197,7 @@
         </div>
       {/if}
 
-      {#if formatSupportsTransparency(exportFormat)}
+      {#if TRANSPARENT_FORMATS.has(exportFormat)}
         <label
           class="flex items-center gap-2 text-xs text-text-dim cursor-pointer"
         >
@@ -274,8 +225,7 @@
       {/if}
 
       <button
-        class="w-full px-3 py-2 text-xs uppercase tracking-wider bg-success text-bg font-bold hover:opacity-90"
-        style="border-radius: 4px;"
+        class="w-full px-3 py-2 text-xs uppercase tracking-wider bg-success text-bg font-bold hover:opacity-90 rounded"
         onclick={handleExport}
       >
         Download
