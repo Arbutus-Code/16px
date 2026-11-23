@@ -54,8 +54,10 @@
   <div>
     <span
       class="text-xs text-text-dim uppercase tracking-wider block mb-1.5"
-      id="tools-label">Tools</span
+      id="tools-label"
     >
+      Tools
+    </span>
     <div
       class="grid grid-cols-5 lg:grid-cols-4 gap-2"
       role="toolbar"
@@ -106,8 +108,10 @@
   <div>
     <span
       class="text-xs text-text-dim uppercase tracking-wider block mb-1.5"
-      id="canvas-size-label">Canvas Size</span
+      id="canvas-size-label"
     >
+      Canvas Size
+    </span>
     <div
       class="grid grid-cols-4 gap-2"
       role="group"
@@ -132,8 +136,10 @@
   <div>
     <span
       class="text-xs text-text-dim uppercase tracking-wider block mb-1.5"
-      id="history-label">History</span
+      id="history-label"
     >
+      History
+    </span>
     <div
       class="grid grid-cols-2 gap-2"
       role="group"

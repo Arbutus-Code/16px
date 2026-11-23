@@ -159,9 +159,9 @@
       </div>
 
       <div class="flex items-center gap-2 min-w-0">
-        <span class="text-xs text-text-dim uppercase tracking-wider shrink-0"
-          >Hue</span
-        >
+        <span class="text-xs text-text-dim uppercase tracking-wider shrink-0">
+          Hue
+        </span>
         <input
           type="range"
           min="0"
@@ -176,9 +176,9 @@
           class="flex-1 min-w-0 accent-accent-secondary"
           aria-label="Hue"
         />
-        <span class="text-xs text-text-dim w-8 text-right font-mono shrink-0"
-          >{hue}</span
-        >
+        <span class="text-xs text-text-dim w-8 text-right font-mono shrink-0">
+          {hue}
+        </span>
       </div>
     </div>
   </div>
@@ -283,9 +283,9 @@
   {/if}
 
   <div>
-    <span class="text-xs text-text-dim uppercase tracking-wider block mb-1.5"
-      >Palette</span
-    >
+    <span class="text-xs text-text-dim uppercase tracking-wider block mb-1.5">
+      Palette
+    </span>
     <div class="grid grid-cols-8 gap-1">
       {#each DEFAULT_PALETTE as color}
         <button

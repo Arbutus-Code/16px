@@ -156,9 +156,9 @@
       role="region"
       aria-label="Export settings"
     >
-      <span class="text-xs text-text-dim uppercase tracking-wider"
-        >Export Settings</span
-      >
+      <span class="text-xs text-text-dim uppercase tracking-wider">
+        Export Settings
+      </span>
 
       <div>
         <span class="text-xs text-text-dim uppercase block mb-1">Format</span>
@@ -180,10 +180,9 @@
 
       {#if exportFormat !== "svg"}
         <div>
-          <span class="text-xs text-text-dim uppercase block mb-1"
-            >Scale: {exportScale}x ({editorState.gridSize *
-              exportScale}px)</span
-          >
+          <span class="text-xs text-text-dim uppercase block mb-1">
+            Scale: {exportScale}x ({editorState.gridSize * exportScale}px)
+          </span>
           <input
             type="range"
             min="1"

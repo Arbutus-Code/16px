@@ -37,13 +37,14 @@
       </h1>
       <span
         class="text-xs text-text-dim uppercase tracking-widest hidden sm:inline"
-        >Pixel Art Editor</span
       >
+        Pixel Art Editor
+      </span>
     </div>
     <div class="flex items-center gap-4 text-xs text-text-dim font-mono">
-      <span aria-live="polite"
-        >{editorState.gridSize}x{editorState.gridSize}</span
-      >
+      <span aria-live="polite">
+        {editorState.gridSize}x{editorState.gridSize}
+      </span>
       <span
         class="w-3 h-3 border border-border"
         style="background-color: {editorState.currentColor};"
@@ -117,8 +118,9 @@
         <div class="w-[70%] max-w-[70%]">
           <span
             class="text-xs text-text-dim uppercase tracking-wider block mb-2"
-            >Main Color</span
           >
+            Main Color
+          </span>
           <ColorPicker />
         </div>
 
@@ -135,24 +137,28 @@
     <a
       href="/terms/"
       class="hover:text-text transition-colors no-underline text-text-dim"
-      >Terms</a
     >
+      Terms
+    </a>
     <span class="text-border">·</span>
     <a
       href="/privacy/"
       class="hover:text-text transition-colors no-underline text-text-dim"
-      >Privacy</a
     >
+      Privacy
+    </a>
     <span class="text-border">·</span>
-    <span
-      >© {new Date().getFullYear()}
+    <span>
+      © {new Date().getFullYear()}
       <a
         href="https://arbutuscode.ca"
         class="hover:text-text transition-colors no-underline text-text-dim"
         target="_blank"
-        rel="noopener noreferrer">Arbutus Code</a
-      ></span
-    >
+        rel="noopener noreferrer"
+      >
+        Arbutus Code
+      </a>
+    </span>
   </footer>
 
   <ConsentBanner />

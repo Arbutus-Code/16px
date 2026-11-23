@@ -25,20 +25,20 @@
   aria-hidden="true"
 >
   <div class="flex items-center justify-between mb-2">
-    <span class="text-xs text-text-dim uppercase tracking-wider"
-      >Live Preview</span
-    >
-    <span class="text-xs text-text-dim font-mono"
-      >{editorState.gridSize}x{editorState.gridSize}</span
-    >
+    <span class="text-xs text-text-dim uppercase tracking-wider">
+      Live Preview
+    </span>
+    <span class="text-xs text-text-dim font-mono">
+      {editorState.gridSize}x{editorState.gridSize}
+    </span>
   </div>
 
   <div class="flex items-start gap-4">
     {#each SCALES as scale, i}
       <div class="flex flex-col items-center gap-1">
-        <span class="text-xs text-text-dim uppercase tracking-wider"
-          >{scale}x</span
-        >
+        <span class="text-xs text-text-dim uppercase tracking-wider">
+          {scale}x
+        </span>
         <div class="border border-border p-1 bg-bg-input rounded">
           <canvas
             bind:this={canvasEls[i]}
